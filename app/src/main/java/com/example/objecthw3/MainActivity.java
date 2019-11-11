@@ -6,10 +6,22 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+/*
+*
+* @Author: Alex Rogers
+*
+* Homework Three
+*
+* Novemeber 9th 2019
+*
+*
+*
+* */
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     public Button ButtonArr[][] = new Button[4][4];
@@ -24,8 +36,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         initializeGrid();
+        Button Randomizer= (Button) findViewById(R.id.Randomize);
+        Randomizer.setOnClickListener(this);
+        TextView t = findViewById(R.id.textView);
+        if(isOver()){
+            t.setText("You Won");
+        }
     }
     public void initializeGrid(){
         ButtonArr[0][0] = findViewById(R.id.button);
@@ -45,12 +64,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ButtonArr[3][2] = findViewById(R.id.button15);
         ButtonArr[3][3] = findViewById(R.id.button16);
 
+
         ArrSort = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16));
         Collections.shuffle(ArrSort);
         int val =1;
         int index =0 ;
         for(int i = 0;i<4;i++){
-            for(int j = 0;j<4;j++){
+            for(int j = 0;j<4;j++){//loops to initially randomize, and set listeners to buttons
                 Correct[i][j] = val;
                 Board[i][j] = ArrSort.get(index);
                 if(ArrSort.get(index) == 16){
@@ -58,15 +78,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     emptyJ = j;
                 }
                 ButtonArr[i][j].setText(" " + Board[i][j]);
-                ButtonArr[0][0].setOnClickListener(this);
+                if(Board[i][j] == 16){ButtonArr[i][j].setText(" ");}
+                ButtonArr[i][j].setOnClickListener(this);
                 index++;
                 val++;
             }
         }
     }
-    public void validMove(int i, int j){
 
-    }
+
+
     public void randomize(){
         Collections.shuffle(ArrSort);
         int index =0 ;
@@ -77,19 +98,71 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     emptyI = i;
                     emptyJ = j;
                 }
+                ButtonArr[i][j].setText(" " + Board[i][j]);
+                if(Board[i][j] == 16){ButtonArr[i][j].setText(" ");}
                 index++;
             }
         }
     }
+    public Boolean isOver(){
+        int temp = 0;//counts correct squares
+        for(int i = 0;i<4;i++){
+            for(int j = 0;j<4;j++){
+                if(Correct[i][j] == Board[i][j]){
+                    temp++;
+                }
+            }}
+        if(temp ==16){return true;}
+        else{return false;}
+    }
     public void onClick(View v) {
+
         //call randomize method
+        Button clicked = (Button)v;
         if (v.getId() == R.id.Randomize) {
             randomize();
         }
-        Button clickedButt = (Button)v;
+
         for(int i=0; i<4; i++){
             for(int j=0; j<4; j++){
-                if(ButtonArr[i][j] == clickedButt){
+                if(ButtonArr[i][j] == clicked){
+                    if((emptyI==i-1) && (emptyJ==j) /* && (i-1) >= 0*/){//check above
+                        ButtonArr[emptyI][emptyJ].setText(clicked.getText());
+                        ButtonArr[i][j].setText(" ");
+                        int temp = Board[i][j];
+                        Board[i-1][j] = temp;
+                        Board[i][j] = 16;
+                        emptyI = i;
+                        emptyJ = j;
+                    }
+                    if((emptyI==i+1) && (emptyJ==j) /*&& (i+1) <= 4*/){//check below
+                        ButtonArr[emptyI][emptyJ].setText(clicked.getText());
+                        ButtonArr[i][j].setText(" ");
+                        int temp = Board[i][j];
+                        Board[i+1][j] = temp;
+                        Board[i][j] = 16;
+                        emptyI = i;
+                        emptyJ = j;
+                    }
+                    if((emptyI==i) && (emptyJ==j-1) ){//check left
+                        ButtonArr[emptyI][emptyJ].setText(clicked.getText());
+                        ButtonArr[i][j].setText(" ");
+                        int temp = Board[i][j];
+                        Board[i][j-1] = temp;
+                        Board[i][j] = 16;
+                        emptyI = i;
+                        emptyJ = j;
+                    }
+                    if((emptyI==i) && (emptyJ==j+1)){//check right
+                        ButtonArr[emptyI][emptyJ].setText(clicked.getText());
+                        ButtonArr[i][j].setText(" ");
+                        int temp = Board[i][j];
+                        Board[i][j+1] = temp;
+                        Board[i][j] = 16;
+                        emptyI = i;
+                        emptyJ = j;
+                    }
+
 
 
 
@@ -97,6 +170,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         }
-
+        //v.invalidate();
     }
 }
+/*External CitationDate:      November 10, 2019
+ * Problem:  Button Layout
+ * Solution: Sierra and Haley advised using a table layout
+ */
+/*External CitationDate:      November 10, 2019
+ * Problem:  ArrayList
+ * Source: https://www.geeksforgeeks.org/initialize-an-arraylist-in-java/
+ * Solution: I used an array list and shuffled it
+ */
