@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 val++;
             }
         }
+        setCorrect();//initially sets all nums to RED
     }
 
 
@@ -93,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for(int i = 0;i<4;i++){
             for(int j = 0;j<4;j++){
                 Board[i][j] = ArrSort.get(index);
-                if(ArrSort.get(index) == 16){
+                if(ArrSort.get(index) == 16){//blank value
                     emptyI = i;
                     emptyJ = j;
                 }
@@ -186,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(isOver()){
             t.setText("You Won");
         }
-        setCorrect();
+        setCorrect();//chnage colors of text
     }
 }
 /*External CitationDate:      November 10, 2019
