@@ -39,13 +39,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        initializeGrid();
+        initBoard();
         Button Randomizer=  findViewById(R.id.Randomize);
         Randomizer.setOnClickListener(this);
 
 
     }
-    public void initializeGrid(){
+    public void initBoard(){//initialize
         ButtonArr[0][0] = findViewById(R.id.button);
         ButtonArr[0][1] = findViewById(R.id.button2);
         ButtonArr[0][2] = findViewById(R.id.button3);
