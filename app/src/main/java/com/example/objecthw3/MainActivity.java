@@ -3,6 +3,7 @@ package com.example.objecthw3;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -20,17 +21,17 @@ import java.util.Collections;
 * Novemeber 9th 2019
 *
 *
-*
+*Citations at bottom
 * */
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     public Button ButtonArr[][] = new Button[4][4];
-    public int Board[][] = new int[4][4];
+    public int Board[][] = new int[4][4];//4x4 array for puzzle board
     public int Correct[][] = new int[4][4];
-    public int emptyI;
-    public int emptyJ;
+    public int emptyI;//blank space row
+    public int emptyJ;//blank space col
 
-    public ArrayList<Integer> ArrSort;
+    public ArrayList<Integer> ArrSort;//array for all nums
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -39,12 +40,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         initializeGrid();
-        Button Randomizer= (Button) findViewById(R.id.Randomize);
+        Button Randomizer=  findViewById(R.id.Randomize);
         Randomizer.setOnClickListener(this);
-        TextView t = findViewById(R.id.textView);
-        if(isOver()){
-            t.setText("You Won");
-        }
+
+
     }
     public void initializeGrid(){
         ButtonArr[0][0] = findViewById(R.id.button);
@@ -65,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ButtonArr[3][3] = findViewById(R.id.button16);
 
 
-        ArrSort = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16));
+        ArrSort = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16));// see citation at bottom
         Collections.shuffle(ArrSort);
         int val =1;
         int index =0 ;
@@ -88,8 +87,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-    public void randomize(){
-        Collections.shuffle(ArrSort);
+    public void randomize(){//I've played the puzzle online and have to say my randomize is a lot harder to win with
+        Collections.shuffle(ArrSort);//shuffles, see citation
         int index =0 ;
         for(int i = 0;i<4;i++){
             for(int j = 0;j<4;j++){
@@ -115,22 +114,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(temp ==16){return true;}
         else{return false;}
     }
+    public void setCorrect(){
+        for(int i = 0;i<4;i++){
+            for(int j = 0;j<4;j++) {
+                if (Board[i][j] == Correct[i][j]){
+                    ButtonArr[i][j].setTextColor(Color.GREEN);
+                }
+                else{
+                    ButtonArr[i][j].setTextColor(Color.RED);
+                }
+
+            }}
+    }
     public void onClick(View v) {
 
-        //call randomize method
+
         Button clicked = (Button)v;
         if (v.getId() == R.id.Randomize) {
-            randomize();
+            randomize();//random button
         }
 
         for(int i=0; i<4; i++){
-            for(int j=0; j<4; j++){
+            for(int j=0; j<4; j++){//iterates through Button and Board arrays
                 if(ButtonArr[i][j] == clicked){
-                    if((emptyI==i-1) && (emptyJ==j) /* && (i-1) >= 0*/){//check above
+                    if((emptyI==i-1) && (emptyJ==j) /* && (i-1) >= 0*/){//check above, no need for out of bounds checking
                         ButtonArr[emptyI][emptyJ].setText(clicked.getText());
                         ButtonArr[i][j].setText(" ");
                         int temp = Board[i][j];
-                        Board[i-1][j] = temp;
+                        Board[i-1][j] = temp;//for win condition
                         Board[i][j] = 16;
                         emptyI = i;
                         emptyJ = j;
@@ -171,6 +182,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
         //v.invalidate();
+        TextView t = findViewById(R.id.textView);//checks if everything is in the right place
+        if(isOver()){
+            t.setText("You Won");
+        }
+        setCorrect();
     }
 }
 /*External CitationDate:      November 10, 2019
@@ -181,4 +197,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
  * Problem:  ArrayList
  * Source: https://www.geeksforgeeks.org/initialize-an-arraylist-in-java/
  * Solution: I used an array list and shuffled it
+ */
+/*External CitationDate:      November 10, 2019
+ * Problem:  Shuffle the Array List
+ * Solution: Mikey mentioned the function when we were discussing how to shuffle for our Euchre Game
  */
